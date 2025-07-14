@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: uniosun-tacdra-api
+    env: node
+    region: oregon # Change to your preferred region
+    plan: starter # or free for testing
+    buildCommand: chmod +x render-build.sh && ./render-build.sh
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true # Render will generate a secure random value
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: MAX_FILE_SIZE
+        value: 10485760
+      - key: UPLOAD_PATH
+        value: ./uploads
+      - key: FRONTEND_URL
+        value: https://uniosuntacdvs.vercel.app
+      # Database variables (to be set manually)
+      - key: DATABASE_HOST
+        sync: false # Set manually in Render dashboard
+      - key: DATABASE_PORT
+        value: 3306
+      - key: DATABASE_USERNAME
+        sync: false # Set manually in Render dashboard
+      - key: DATABASE_PASSWORD
+        sync: false # Set manually in Render dashboard
+      - key: DATABASE_NAME
+        value: uniosun_tacdra
+      # Remita variables (to be set manually)
+      - key: REMITA_MERCHANT_ID
+        sync: false # Set manually in Render dashboard
+      - key: REMITA_SERVICE_TYPE_ID
+        sync: false # Set manually in Render dashboard
+      - key: REMITA_API_KEY
+        sync: false # Set manually in Render dashboard
+      - key: REMITA_BASE_URL
+        value: https://login.remita.net # Production URL
+
+databases:
+  - name: uniosun-tacdra-db
+    databaseName: uniosun_tacdra
+    user: tacdra_user
+    region: oregon # Same region as web service
+    plan: starter # or free for testing
